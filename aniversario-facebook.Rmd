@@ -1,0 +1,38 @@
+---
+title: "AniversÃ¡rio de Usuarios do Facebook"
+author: "Marcos Mota"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+pf <- read.csv('pseudo_facebook.tsv', sep = '\t')
+```
+
+## Introdução
+Este dataset tem aproximadamente 99.000 linhas ou observações nele com 15 variáveis. Cada observação representa um usuário e esse usuário terá informações diferentes, como idade, nome ou data de nascimento. Podemos ver todas essas variáveis executando o comando de nomes. Agora, em todo este processo, nosso objetivo é entender o usuário
+comportamento e sua demografia. 
+
+Porem a Udacity deixa bem claro que não são dados reais do Facebook. Então não todas as estatísticas neste projeto serão representações de como as pessoas usam o Facebook em um dia a dia.
+
+## Histograma dos Aniversário dos Usuarios
+```{r pf}
+ggplot(aes(x = dob_day), data = pf) + 
+  geom_histogram(binwidth = 1) + 
+  scale_x_continuous(breaks = 1:31, name = "Dia de Aniversário") +
+  ylab("Quantidade") 
+```
+
+
+Notei algo bem estranho, o primeiro dia do mês chega a quase 8.000, com uma diferença de 4.000 do segundo maior dados, isso é algo incomum, eu esperava que os aniversário fosse algo distribuido, acredito que seja um outilier. E no dia 31, acredito que ele esteje menor, pois 7 de 12 meses tem 31 dias, isso explicaria a atenuação nesse dia em especifico.
+
+
+```{r}
+ggplot(data = pf, aes(x = dob_day)) + 
+  geom_histogram(binwidth = 1) + 
+  scale_x_continuous(breaks = 1:31, name = "Dia de Aniversário") + 
+  ylab("Quantidade") +
+  facet_wrap(~dob_month)
+```
+
+Essa diferença me deixou muito intrigado, para ter uma visão mais ampla do problema plotei os dados dividindo eles em 12 meses para ver se repetia em todos os meses. E como se pode se ver, no grafico acima, apenas o primeiro dia do mês de janeiro (reveillon), é responsavél por esse exagero. Após ver esse grafico fiquei mais propenso que temos um outilier nos dados, esse caso se encaixa na categoria de dados ruins com um caso extremos.
